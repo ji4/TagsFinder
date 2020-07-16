@@ -1,16 +1,20 @@
 # !/usr/bin/python
 # coding:utf-8
-
+import os
+from os import listdir
+from os.path import isfile, join
 from bs4 import BeautifulSoup
 import re
 
-filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
+#filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
+dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
 tagAttr = 'href'
 tagValue = u'🔆'
 strAttrSplitValue = 'strMemo='
+sliceNum = 1
+index = 1
 
 
-soup = BeautifulSoup(open(filePath), 'html.parser')
 
 class ObjTag:
 	def __init__(self):
@@ -46,7 +50,14 @@ def extractTags(sun_tags):
 	for sun_tag in sun_tags:
 		#extract codingMemo
 		attrValue = sun_tag.attrs[tagAttr]
-		codingMemo = attrValue.split(strAttrSplitValue,1)[1]
+		print 'attrValue: '
+		print attrValue
+		print '\n'
+		if strAttrSplitValue in attrValue:
+			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
+		else:
+			codingMemo = attrValue
+			
 
 		#create a new object
 		objTag = ObjTag()
@@ -61,7 +72,15 @@ def extractTags(sun_tags):
 		aryTags.append(objTag)
 		
 	return aryTags
-		
+
+def findFiles(path):
+	return [f for f in listdir(path) if isfile(join(path, f))]
 
 if __name__ == "__main__":
-	findTagsByTagValue(tagValue)
+	htmlFiles = findFiles(dirPath)
+	print htmlFiles
+	for file in htmlFiles:
+		print 'current file: '
+		print file
+		soup = BeautifulSoup(open(dirPath + '/' + file), 'html.parser')
+		findTagsByTagValue(tagValue)
