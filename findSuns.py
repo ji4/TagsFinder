@@ -61,7 +61,7 @@ def extractTags(sun_tags):
 		objTag = ObjTag()
 		
 		#store value into object
-		objTag.codingMemo = codingMemo
+		objTag.codingMemo = codingMemomystring.replace('\n', ' ').replace('\r', '')
 		
 		if isinstance(sun_tag.previousSibling, basestring):
 			objTag.previousSibling = sun_tag.previousSibling.strip()
