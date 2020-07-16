@@ -8,13 +8,12 @@ import re
 
 #filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
 dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
+outputDirPath = '/Users/money/Documents/GitHub/TagsFinder/'
 tagAttr = 'href'
 tagValue = u'🔆'
 strAttrSplitValue = 'strMemo='
 sliceNum = 1
 index = 1
-
-
 
 class ObjTag:
 	def __init__(self):
@@ -36,13 +35,11 @@ class ObjTag:
 	def previousSibling(self, previousSibling):
 		self._previousSibling = previousSibling
 	
-def findTagsByTagValue(tagValue):
+def findTagsByTagValue(soup, tagValue):
 	sun_tags = soup.findAll('a', text = tagValue)
 	arySunTags = extractTags(sun_tags)
-	for s in arySunTags:
-		print '\ns.codingMEmo: ' + s.codingMemo
-		print 'previous sibling: ' 
-		print s.previousSibling
+	return arySunTags
+	
 
 	
 def extractTags(sun_tags):
@@ -50,9 +47,7 @@ def extractTags(sun_tags):
 	for sun_tag in sun_tags:
 		#extract codingMemo
 		attrValue = sun_tag.attrs[tagAttr]
-		print 'attrValue: '
-		print attrValue
-		print '\n'
+
 		if strAttrSplitValue in attrValue:
 			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
 		else:
@@ -75,12 +70,28 @@ def extractTags(sun_tags):
 
 def findFiles(path):
 	return [f for f in listdir(path) if isfile(join(path, f))]
+def findSunsInFiles(files):
+	for file in files:
+		soup = BeautifulSoup(open(dirPath + '/' + file), 'html.parser')
+		arySunTags = findTagsByTagValue(soup, tagValue)
+		saveToFile(file, arySunTags)
+
+def saveToFile(file, arySunTags):
+    with open(outputDirPath + '/output', 'a+') as fLog:
+		for sun in arySunTags:
+			print 'sun.previousSibling: '
+			print sun.previousSibling
+
+			fLog.write(file + '\t')
+			if sun.previousSibling is not None:
+				fLog.write(sun.previousSibling.encode('utf-8').strip())
+			fLog.write('\t')
+			if sun.codingMemo is not None:
+				fLog.write(sun.codingMemo.encode('utf-8').strip())
+			fLog.write('\n')
+			
 
 if __name__ == "__main__":
 	htmlFiles = findFiles(dirPath)
-	print htmlFiles
-	for file in htmlFiles:
-		print 'current file: '
-		print file
-		soup = BeautifulSoup(open(dirPath + '/' + file), 'html.parser')
-		findTagsByTagValue(tagValue)
+#	print htmlFiles
+	findSunsInFiles(htmlFiles)
