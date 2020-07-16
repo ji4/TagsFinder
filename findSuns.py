@@ -11,6 +11,7 @@ dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
 outputDirPath = '/Users/money/Documents/GitHub/TagsFinder/'
 tagAttr = 'href'
 tagValue = u'🔆'
+completeLinkPattern = '//'
 strAttrSplitValue = 'strMemo='
 sliceNum = 1
 index = 1
@@ -48,7 +49,9 @@ def extractTags(sun_tags):
 		#extract codingMemo
 		attrValue = sun_tag.attrs[tagAttr]
 
-		if strAttrSplitValue in attrValue:
+		if completeLinkPattern in attrValue:
+			codingMemo = attrValue
+		elif strAttrSplitValue in attrValue:
 			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
 		else:
 			codingMemo = attrValue
@@ -93,5 +96,4 @@ def saveToFile(file, arySunTags):
 
 if __name__ == "__main__":
 	htmlFiles = findFiles(dirPath)
-#	print htmlFiles
 	findSunsInFiles(htmlFiles)
