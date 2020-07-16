@@ -12,14 +12,25 @@ strAttrSplitValue = 'strMemo='
 
 soup = BeautifulSoup(open(filePath), 'html.parser')
 
-class ObjTag():
+class ObjTag:
 	def __init__(self):
-		self.codingMemo = ''
-#		self.previousSibling = 
-	def addCodingMemo(self, codingMemo):
-		self.codingMemo = codingMemo
-	def addPreviousSibling(self, previousSibling):
-		self.previousSibling = previousSibling
+		self._codingMemo = None
+		self._previousSibling = None
+	@property
+	def codingMemo(self):
+		return self._codingMemo
+	
+	@property
+	def previousSibling(self):
+		return self._previousSibling
+	
+	@codingMemo.setter
+	def codingMemo(self, codingMemo):
+		self._codingMemo = codingMemo
+		
+	@previousSibling.setter
+	def previousSibling(self, previousSibling):
+		self._previousSibling = previousSibling
 	
 def findTagsByTagValue(tagValue):
 	sun_tags = soup.findAll('a', text = tagValue)
@@ -44,9 +55,9 @@ def extractTags(sun_tags):
 		objTag.codingMemo = codingMemo
 		
 		if isinstance(sun_tag.previousSibling, basestring):
-			objTag.addPreviousSibling(sun_tag.previousSibling.strip())
+			objTag.previousSibling = sun_tag.previousSibling.strip()
 		else:
-			objTag.addPreviousSibling(sun_tag.previousSibling)
+			objTag.previousSibling = sun_tag.previousSibling
 		aryTags.append(objTag)
 		
 	return aryTags
