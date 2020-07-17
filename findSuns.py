@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import re
 
 #filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
-dirPath = '/Users/money/Documents/GitHub/cdcMain/pages2/'
+dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
 outputDirPath = '/Users/money/Documents/GitHub/TagsFinder/'
 tagAttr = 'href'
 tagValue = u'🔆'
@@ -86,7 +86,7 @@ def extractTags(sun_tags):
 		previous_tag = findPreviousSibling(sun_tag)
 		if isinstance(previous_tag, basestring): # is string
 			objTag.previousSibling = previous_tag.strip()
-		else: #is a tag
+		elif previous_tag is not None: #is a tag
 			if remove_html_tags(previous_tag.text).strip() == '*':#find previous tag if it is *
 				previous_tag = previous_tag.previousSibling
 				objTag.previousSibling = previous_tag.strip()
@@ -109,14 +109,13 @@ def findSunsInFiles(files):
 def saveToFile(file, arySunTags):
     with open(outputDirPath + '/output', 'a+') as fLog:
 		for sun in arySunTags:
-
 			fLog.write(file + '\t')
 			if sun.previousSibling is not None:
 				fLog.write(sun.previousSibling.encode('utf-8').strip())
 			fLog.write('\t')
 			if sun.codingMemo is not None:
 				fLog.write(sun.codingMemo.encode('utf-8').strip())
-			fLog.write('\n')
+				fLog.write('\n')
 			
 
 if __name__ == "__main__":
