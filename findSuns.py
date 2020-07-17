@@ -54,7 +54,13 @@ def findPreviousSibling(tag):
 	print 'A previous tag with "tag" suffix found: '
 	print tag.find_previous_sibling()
 	return tag.find_previous_sibling() #previous tag's suffix is a closed tag
-	
+
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    import re
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
+
 def extractTags(sun_tags):
 	aryTags = []
 	for sun_tag in sun_tags:
@@ -80,8 +86,8 @@ def extractTags(sun_tags):
 		previous_tag = findPreviousSibling(sun_tag)
 		if isinstance(previous_tag, basestring): # is string
 			objTag.previousSibling = previous_tag.strip()
-		else:
-			objTag.previousSibling = previous_tag
+		else: #is a tag
+			objTag.previousSibling = remove_html_tags(previous_tag.text)
 		
 		aryTags.append(objTag)
 		
