@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import re
 
 #filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
-dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
+dirPath = '/Users/money/Documents/GitHub/cdcMain/pages2/'
 outputDirPath = '/Users/money/Documents/GitHub/TagsFinder/'
 tagAttr = 'href'
 tagValue = u'🔆'
@@ -55,13 +55,27 @@ def extractTags(sun_tags):
 			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
 		else:
 			codingMemo = attrValue
+		codingMemo = codingMemo.replace('\n', ' ').replace('\r', '')
+
+		print 'sun_tag.find_previous_sibling(): '
+		print sun_tag.find_previous_sibling()
+		print '\n'
+		
+		if sun_tag.find_previous_sibling() is None:
+			print 'None previous tag found. Searching previous tag again.'
+			print 'A newly found tag: '
+			print sun_tag.previousSibling
+			print '\n'
 			
+		print 'codingMemo: '
+		print codingMemo
+		print '\n'
 
 		#create a new object
 		objTag = ObjTag()
 		
 		#store value into object
-		objTag.codingMemo = codingMemomystring.replace('\n', ' ').replace('\r', '')
+		objTag.codingMemo = codingMemo
 		
 		if isinstance(sun_tag.previousSibling, basestring):
 			objTag.previousSibling = sun_tag.previousSibling.strip()
@@ -82,8 +96,6 @@ def findSunsInFiles(files):
 def saveToFile(file, arySunTags):
     with open(outputDirPath + '/output', 'a+') as fLog:
 		for sun in arySunTags:
-			print 'sun.previousSibling: '
-			print sun.previousSibling
 
 			fLog.write(file + '\t')
 			if sun.previousSibling is not None:
