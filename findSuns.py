@@ -87,7 +87,12 @@ def extractTags(sun_tags):
 		if isinstance(previous_tag, basestring): # is string
 			objTag.previousSibling = previous_tag.strip()
 		else: #is a tag
-			objTag.previousSibling = remove_html_tags(previous_tag.text)
+			if remove_html_tags(previous_tag.text).strip() == '*':#find previous tag if it is *
+				previous_tag = previous_tag.previousSibling
+				objTag.previousSibling = previous_tag.strip()
+			else:
+				objTag.previousSibling = remove_html_tags(previous_tag.text)
+			
 		
 		aryTags.append(objTag)
 		
