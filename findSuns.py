@@ -113,7 +113,7 @@ def saveToFile(file, arySunTags):
 		for sun in arySunTags:
 			fLog.write(file + '\t')
 			if sun.previousSibling is not None:
-				fLog.write(sun.previousSibling.encode('utf-8').strip())
+				fLog.write(sun.previousSibling.encode('utf-8').strip().replace('\n', ' ').replace('\r', ''))
 			fLog.write('\t')
 			if sun.codingMemo is not None:
 				fLog.write(sun.codingMemo.encode('utf-8').strip())
