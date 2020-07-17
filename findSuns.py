@@ -41,13 +41,26 @@ def findTagsByTagValue(soup, tagValue):
 	arySunTags = extractTags(sun_tags)
 	return arySunTags
 	
-
+def findPreviousSibling(tag):
+	print 'codingMemo: '
+	print tag.codingMemo
+	print '\n'
+	
+	if tag.find_previous_sibling() is None: #previous tag's suffix is text
+		print 'A previous tag with "text" suffix found: '
+		print tag.previousSibling
+		print '\n'
+		return tag.previousSibling
+	print 'A previous tag with "tag" suffix found: '
+	print tag.find_previous_sibling()
+	return tag.find_previous_sibling() #previous tag's suffix is a closed tag
 	
 def extractTags(sun_tags):
 	aryTags = []
 	for sun_tag in sun_tags:
 		#extract codingMemo
 		attrValue = sun_tag.attrs[tagAttr]
+		
 
 		if completeLinkPattern in attrValue:
 			codingMemo = attrValue
@@ -56,20 +69,7 @@ def extractTags(sun_tags):
 		else:
 			codingMemo = attrValue
 		codingMemo = codingMemo.replace('\n', ' ').replace('\r', '')
-
-		print 'sun_tag.find_previous_sibling(): '
-		print sun_tag.find_previous_sibling()
-		print '\n'
-		
-		if sun_tag.find_previous_sibling() is None:
-			print 'None previous tag found. Searching previous tag again.'
-			print 'A newly found tag: '
-			print sun_tag.previousSibling
-			print '\n'
-			
-		print 'codingMemo: '
-		print codingMemo
-		print '\n'
+		sun_tag.codingMemo = codingMemo
 
 		#create a new object
 		objTag = ObjTag()
@@ -77,10 +77,12 @@ def extractTags(sun_tags):
 		#store value into object
 		objTag.codingMemo = codingMemo
 		
-		if isinstance(sun_tag.previousSibling, basestring):
-			objTag.previousSibling = sun_tag.previousSibling.strip()
+		previous_tag = findPreviousSibling(sun_tag)
+		if isinstance(previous_tag, basestring): # not None
+			objTag.previousSibling = previous_tag.strip()
 		else:
-			objTag.previousSibling = sun_tag.previousSibling
+			objTag.previousSibling = previous_tag
+		
 		aryTags.append(objTag)
 		
 	return aryTags
