@@ -78,7 +78,7 @@ def extractTags(sun_tags):
 		objTag.codingMemo = codingMemo
 		
 		previous_tag = findPreviousSibling(sun_tag)
-		if isinstance(previous_tag, basestring): # not None
+		if isinstance(previous_tag, basestring): # is string
 			objTag.previousSibling = previous_tag.strip()
 		else:
 			objTag.previousSibling = previous_tag
