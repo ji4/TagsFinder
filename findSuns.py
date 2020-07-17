@@ -118,8 +118,20 @@ def saveToFile(file, arySunTags):
 			if sun.codingMemo is not None:
 				fLog.write(sun.codingMemo.encode('utf-8').strip())
 				fLog.write('\n')
-			
+
+def tryint(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def alphanum_key(s):
+    """ Turn a string into a list of string and number chunks.
+        "z23a" -> ["z", 23, "a"]
+    """
+    return [ tryint(c) for c in re.split('([0-9]+)', s) ]
 
 if __name__ == "__main__":
 	htmlFiles = findFiles(dirPath)
+	htmlFiles.sort(key=alphanum_key)#Sort the given list in the way that humans expect.
 	findSunsInFiles(htmlFiles)
