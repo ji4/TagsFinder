@@ -67,10 +67,12 @@ def extractTags(sun_tags):
 		#extract codingMemo
 		attrValue = sun_tag.attrs[tagAttr]
 		
-
-		if completeLinkPattern in attrValue:
-			codingMemo = attrValue
-		elif strAttrSplitValue in attrValue:
+		if completeLinkPattern in attrValue:#https://ca.....
+			if strAttrSplitValue in attrValue:#....strMemo=....https://ca.....
+				codingMemo = attrValue.split('codingMemo.html?strMemo=', sliceNum)[index]
+			else:
+				codingMemo = attrValue
+		elif strAttrSplitValue in attrValue:#....strMemo=....
 			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
 		else:
 			codingMemo = attrValue
