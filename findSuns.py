@@ -5,6 +5,7 @@ from os import listdir
 from os.path import isfile, join
 from bs4 import BeautifulSoup
 import re
+from urllib import unquote
 
 #filePath = '/Users/money/Documents/GitHub/cdcMain/pages/13_1_new_cluster_report.html'
 dirPath = '/Users/money/Documents/GitHub/cdcMain/pages/'
@@ -68,10 +69,10 @@ def extractTags(sun_tags):
 		attrValue = sun_tag.attrs[tagAttr]
 		
 		if completeLinkPattern in attrValue:#https://ca.....
-			if strAttrSplitValue in attrValue:#....strMemo=....https://ca.....
+			if strAttrSplitValue in attrValue and not attrValue.startswith('https://'):#....strMemo=....https://ca.....
 				codingMemo = attrValue.split('codingMemo.html?strMemo=', sliceNum)[index]
 			else:
-				codingMemo = attrValue
+				codingMemo = unquote(attrValue).decode('utf8')
 		elif strAttrSplitValue in attrValue:#....strMemo=....
 			codingMemo = attrValue.split(strAttrSplitValue, sliceNum)[index]
 		else:
